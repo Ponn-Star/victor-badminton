@@ -131,6 +131,8 @@
   background: var(--color-primary);
   transform: translateX(4px);
 }
+
+.ai-card {
   padding: 3rem 2rem;
   text-align: center;
   transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
