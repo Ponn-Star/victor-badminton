@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './CompareTool.css';
+import { API_BASE } from '../utils/api';
 
 // Map singular DB status → plural API endpoint
 const STATUS_TO_ENDPOINT = { racket: 'rackets', shoe: 'shoes', shoes: 'shoes', shuttle: 'shuttles' };
@@ -19,7 +20,7 @@ function CompareTool({ isOpen, onClose, items, onRemove }) {
         for (const item of items) {
           const rawStatus = item.status || item.type || 'racket';
           const endpoint = STATUS_TO_ENDPOINT[rawStatus] || 'rackets';
-          const response = await fetch(`/api/products/${endpoint}`);
+          const response = await fetch(`${API_BASE}/api/products/${endpoint}`);
           if (!response.ok) {
             console.error(`Failed to fetch /api/products/${endpoint}:`, response.status);
             continue;

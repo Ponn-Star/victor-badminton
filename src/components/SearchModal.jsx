@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './SearchModal.css';
+import { API_BASE } from '../utils/api';
 
 function SearchModal({ isOpen, onClose, onViewDetail }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -16,8 +17,8 @@ function SearchModal({ isOpen, onClose, onViewDetail }) {
       setLoading(true);
       try {
         const [racketsResponse, shuttlesResponse] = await Promise.all([
-          fetch('/api/products/rackets'),
-          fetch('/api/products/shuttles')
+          fetch(`${API_BASE}/api/products/rackets`),
+          fetch(`${API_BASE}/api/products/shuttles`)
         ]);
 
         const racketsData = (await racketsResponse.json()) || [];

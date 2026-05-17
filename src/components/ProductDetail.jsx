@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import './ProductDetail.css';
+import { API_BASE } from '../utils/api';
 
 function ProductDetail({ product: propProduct, productType: propProductType, onCompare }) {
   const { productId } = useParams();
@@ -30,7 +31,7 @@ function ProductDetail({ product: propProduct, productType: propProductType, onC
       const normalizedNameFromUrl = normalize(nameFromUrl);
 
       for (const type of order) {
-        const response = await fetch(`/api/products/${type}`);
+        const response = await fetch(`${API_BASE}/api/products/${type}`);
         if (response.ok) {
           const data = await response.json();
           const found = data.find((p) => {

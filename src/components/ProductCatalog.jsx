@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ProductCatalog.css';
+import { API_BASE } from '../utils/api';
 
 function ProductCatalog({ onCompare, onViewDetail }) {
   const location = useLocation();
@@ -47,7 +48,7 @@ function ProductCatalog({ onCompare, onViewDetail }) {
   const fetchProducts = async (type) => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/products/${type}`);
+      const response = await fetch(`${API_BASE}/api/products/${type}`);
       if (!response.ok) throw new Error('Failed to fetch products');
       const data = await response.json();
       const mappedData = data.map((product, index) => ({

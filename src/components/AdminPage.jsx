@@ -2,10 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './AdminPage.css';
+import { API_BASE } from '../utils/api';
 
-const AUTH_API = '/api/auth';
-const PROD_API = '/api/products';
-const ATH_API  = '/api/athletes';
+const AUTH_API = `${API_BASE}/api/auth`;
+const PROD_API = `${API_BASE}/api/products`;
+const ATH_API  = `${API_BASE}/api/athletes`;
 
 const TYPE_LABELS = { racket: 'Vợt cầu lông', shoes: 'Giày', shuttle: 'Cầu lông' };
 
@@ -468,9 +469,9 @@ function AdminPage() {
             if (filter === 'error')   params.set('hasError', 'true');
 
             const [logsRes, statsRes, healthRes] = await Promise.all([
-                fetch(`/api/chat/admin/logs?${params}`, { headers }),
-                fetch('/api/chat/admin/stats', { headers }),
-                fetch('/api/chat/admin/health', { headers }),
+                fetch(`${API_BASE}/api/chat/admin/logs?${params}`, { headers }),
+                fetch(`${API_BASE}/api/chat/admin/stats`, { headers }),
+                fetch(`${API_BASE}/api/chat/admin/health`, { headers }),
             ]);
             const [logsData, statsData, healthData] = await Promise.all([
                 logsRes.json(), statsRes.json(), healthRes.json(),

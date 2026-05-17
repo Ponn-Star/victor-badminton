@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AthleteList.css';
+import { API_BASE } from '../utils/api';
 
 const PAGE_SIZE = 6;
 
@@ -11,7 +12,7 @@ function AthleteList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('/api/athletes')
+    fetch(`${API_BASE}/api/athletes`)
       .then(res => res.json())
       .then(data => {
         setAthletes(data.athletes || data);

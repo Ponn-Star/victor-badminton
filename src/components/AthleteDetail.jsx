@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './AthleteDetail.css';
+import { API_BASE } from '../utils/api';
 
 function AthleteDetail() {
   const { slug } = useParams();
@@ -10,7 +11,7 @@ function AthleteDetail() {
   const [notFound, setNotFound] = useState(false);
 
   useEffect(() => {
-    fetch(`/api/athletes/${slug}`)
+    fetch(`${API_BASE}/api/athletes/${slug}`)
       .then(res => {
         if (!res.ok) throw new Error('Not found');
         return res.json();
