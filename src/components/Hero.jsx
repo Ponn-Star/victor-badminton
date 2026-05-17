@@ -1,4 +1,5 @@
 import './Hero.css';
+import heroImage from '../assets/png.png';
 
 function Hero() {
   return (
@@ -42,7 +43,7 @@ function Hero() {
 
           <div className="hero-visual">
             <img 
-              src="/src/assets/png.png" 
+              src={heroImage} 
               alt="Professional Badminton Player - Zheng Siwei" 
               className="hero-main-image" 
             />
