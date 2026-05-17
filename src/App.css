@@ -1,0 +1,48 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+}
+
+/* Base background geometric shapes for the "WOW" Depth effect */
+.bg-shape {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  z-index: -1;
+  opacity: 0.5;
+  animation: float 10s ease-in-out infinite;
+}
+
+.bg-shape-1 {
+  width: 400px;
+  height: 400px;
+  background: rgba(255, 87, 34, 0.12); /* Orange */
+  top: -100px;
+  left: -100px;
+}
+
+.bg-shape-2 {
+  width: 500px;
+  height: 500px;
+  background: rgba(0, 0, 0, 0.05); /* Black/Gray */
+  bottom: 20%;
+  right: -150px;
+  animation-delay: -5s;
+}
+
+.bg-shape-3 {
+  width: 300px;
+  height: 300px;
+  background: rgba(216, 67, 21, 0.08); /* Dark Orange */
+  top: 40%;
+  left: 20%;
+  animation-duration: 15s;
+}
