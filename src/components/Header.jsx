@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useClerk } from '@clerk/clerk-react';
 import { useAuth } from '../context/AuthContext';
+import victorLogo from '../assets/victor.png';
 import './Header.css';
 
 function Header({ compareCount, onOpenCompare, onProductsClick, onLogoClick, onOpenSearch, onTeamVictorClick }) {
@@ -46,7 +47,7 @@ function Header({ compareCount, onOpenCompare, onProductsClick, onLogoClick, onO
         <div className="container header-content">
           <button className="logo-btn" onClick={() => { onLogoClick(); closeMobileMenu(); }} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
             <div className="logo">
-              <img src="/src/assets/victor.png" alt="VICTOR Logo" className="logo-img" />
+              <img src={victorLogo} alt="VICTOR Logo" className="logo-img" />
               <svg width="150" height="50" viewBox="0 2 150 50" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <text x="8" y="38" fontSize="32" fontWeight="900" fontFamily="Arial, sans-serif" fill="#003DA5" letterSpacing="1.5">
                   VICTOR

@@ -1,3 +1,4 @@
+import victorLogo1 from '../assets/victor1.webp';
 import './Footer.css';
 
 function Footer() {
@@ -7,7 +8,7 @@ function Footer() {
         <div className="footer-container">
           <div className="footer-brand">
             <div className="footer-logo">
-              <img src="/src/assets/victor1.webp" alt="Victor Logo" className="logo-img" />
+              <img src={victorLogo1} alt="Victor Logo" className="logo-img" />
             </div>
           </div>
 
