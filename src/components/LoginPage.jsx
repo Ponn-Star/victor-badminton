@@ -1,4 +1,4 @@
-import { SignIn } from '@clerk/clerk-react';
+﻿import { SignIn } from '@clerk/clerk-react';
 import victorLogo from '../assets/victor.png';
 import './AuthPage.css';
 
@@ -6,7 +6,7 @@ function LoginPage() {
     return (
         <div className="auth-page">
             <div className="auth-split-card">
-                {/* ── Left: Clerk form ── */}
+                {/* Left: Clerk form */}
                 <div className="auth-left">
                     <div className="auth-brand-logo">
                         <img src={victorLogo} alt="Victor" />
@@ -39,8 +39,8 @@ function LoginPage() {
                                     border: 'none',
                                     width: '100%',
                                 },
-                                header:        { display: 'none' },
-                                logoBox:       { display: 'none' },
+                                header:    { display: 'none' },
+                                logoBox:   { display: 'none' },
                                 formButtonPrimary: {
                                     background: 'linear-gradient(90deg, #e879a8 0%, #d45c7a 100%)',
                                     borderRadius: '50px',
@@ -58,27 +58,7 @@ function LoginPage() {
                     />
                 </div>
 
-                {/* ── Right: Decoration panel ── */}
-                <div className="auth-right">
-                    <div className="auth-bubble auth-bubble--1" />
-                    <div className="auth-bubble auth-bubble--2" />
-                    <div className="auth-bubble auth-bubble--3" />
-                    <div className="auth-bubble auth-bubble--4" />
-                    <div className="auth-right-content">
-                        <img src={victorLogo} alt="Victor" />
-                        <h2>VICTOR</h2>
-                        <p>Trang bị tốt nhất<br />cho đam mê cầu lông của bạn</p>
-                        <div className="auth-right-badge">🏸 Badminton Equipment</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default LoginPage;
-
-                {/* ── Right: Decoration panel ── */}
+                {/* Right: Decoration panel */}
                 <div className="auth-right">
                     <div className="auth-bubble auth-bubble--1" />
                     <div className="auth-bubble auth-bubble--2" />
