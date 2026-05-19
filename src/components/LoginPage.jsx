@@ -1,5 +1,6 @@
 ﻿import { SignIn } from '@clerk/clerk-react';
 import victorLogo from '../assets/victor.png';
+import athletePng from '../assets/png.png';
 import './AuthPage.css';
 
 function LoginPage() {
@@ -60,7 +61,8 @@ function LoginPage() {
 
                 {/* Right: Athlete photo panel */}
                 <div className="auth-right">
-                    <img src="/images/ZSW.webp" alt="Zheng Siwei" className="auth-right-photo" />
+                    <div className="auth-right-bg" />
+                    <img src={athletePng} alt="Athlete" className="auth-right-photo" />
                 </div>
             </div>
         </div>

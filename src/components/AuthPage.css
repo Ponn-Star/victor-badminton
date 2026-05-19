@@ -57,15 +57,34 @@
 .auth-right {
     flex: 0 0 52%;
     position: relative;
+    background: #ffffff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
     overflow: hidden;
 }
 
+/* Inset light-blue rounded box — like the mockup */
+.auth-right-bg {
+    position: absolute;
+    top: 18px;
+    bottom: 18px;
+    left: 24px;
+    right: 18px;
+    background: linear-gradient(160deg, #c8e0ea 0%, #b5cfe0 100%);
+    border-radius: 18px;
+    z-index: 0;
+}
+
+/* Athlete PNG floats above the blue box */
 .auth-right-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
+    position: relative;
+    z-index: 1;
+    width: 85%;
+    height: 96%;
+    object-fit: contain;
+    object-position: center bottom;
+    mix-blend-mode: multiply;
 }
 
 /* ─── Responsive ────────────────────────────────────────────────────────── */
