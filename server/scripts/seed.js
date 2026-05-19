@@ -66,9 +66,15 @@ async function seed() {
     }));
 
     console.log(`\n🏆 Seeding ${athletes.length} athletes...`);
-    await Athlete.deleteMany({});
-    const insertedAthletes = await Athlete.insertMany(athletes, { ordered: false });
-    console.log(`✅ Inserted ${insertedAthletes.length} athletes`);
+    // Upsert theo slug — giữ lại VĐV thêm tay, chỉ cập nhật/thêm từ file
+    for (const athlete of athletes) {
+        await Athlete.findOneAndUpdate(
+            { slug: athlete.slug },
+            { $set: athlete },
+            { upsert: true, returnDocument: 'after' }
+        );
+    }
+    console.log(`✅ Upserted ${athletes.length} athletes (dữ liệu thủ công được giữ lại)`);
 
     console.log('\n🎉 Seed completed successfully!');
     await mongoose.disconnect();

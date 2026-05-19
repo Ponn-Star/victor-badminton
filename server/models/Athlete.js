@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const athleteSchema = new mongoose.Schema({
+    id:         { type: Number, default: 0 },
     name:       { type: String, required: true, trim: true },
     slug:       { type: String, required: true, trim: true },
     country:    { type: String, default: '' },

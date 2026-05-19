@@ -13,7 +13,7 @@ async function isAdminUser(userId) {
 // ─── GET /api/athletes ────────────────────────────────────────────────────────
 router.get('/', async (req, res) => {
     try {
-        const athletes = await Athlete.find({ isActive: true }).lean();
+        const athletes = await Athlete.find({ isActive: true }).sort({ id: 1 }).lean();
         res.json({ athletes });
     } catch (err) {
         res.status(500).json({ message: 'Lỗi server.' });
@@ -27,7 +27,7 @@ router.get('/admin/all', requireAuth(), async (req, res) => {
         console.log('[athletes/admin/all] userId:', userId);
         if (!userId) return res.status(401).json({ message: 'Không có userId.' });
         if (!await isAdminUser(userId)) return res.status(403).json({ message: 'Không có quyền.' });
-        const athletes = await Athlete.find().lean();
+        const athletes = await Athlete.find().sort({ id: 1 }).lean();
         res.json({ athletes });
     } catch (err) {
         console.error('[athletes/admin/all] error:', err.message);
