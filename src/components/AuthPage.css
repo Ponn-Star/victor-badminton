@@ -147,3 +147,138 @@
         padding: 28px 24px;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CLERK COMPONENT OVERRIDES — target rendered .cl-* class names
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Flatten Clerk's outer wrappers */
+.auth-left .cl-rootBox,
+.auth-left .cl-signIn-root,
+.auth-left .cl-signUp-root {
+    width: 100% !important;
+}
+
+.auth-left .cl-card {
+    box-shadow: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    width: 100% !important;
+    gap: 12px !important;
+}
+
+/* Header: "Log In" title */
+.auth-left .cl-headerTitle {
+    font-size: 2.2rem !important;
+    font-weight: 900 !important;
+    color: #1a1a2e !important;
+    text-align: left !important;
+}
+
+/* Subtitle: "Welcome back !!!" */
+.auth-left .cl-headerSubtitle {
+    color: #666 !important;
+    font-size: 0.88rem !important;
+    text-align: left !important;
+}
+
+/* Logo box inside Clerk — hide it (we show our own) */
+.auth-left .cl-logoBox {
+    display: none !important;
+}
+
+/* Input fields — vivid light blue, no border */
+.auth-left .cl-formFieldInput {
+    background: #c8dde8 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: #1a1a2e !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.auth-left .cl-formFieldInput:focus {
+    background: #bdd5e4 !important;
+    box-shadow: 0 0 0 2px rgba(212, 92, 122, 0.25) !important;
+}
+
+/* Field label */
+.auth-left .cl-formFieldLabel {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    color: #444 !important;
+}
+
+/* "Forgot password" link */
+.auth-left .cl-formFieldAction {
+    color: #d45c7a !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+}
+
+/* Primary submit button — pink gradient pill */
+.auth-left .cl-formButtonPrimary {
+    background: linear-gradient(90deg, #e879a8 0%, #d45c7a 100%) !important;
+    border-radius: 50px !important;
+    font-weight: 700 !important;
+    letter-spacing: 2px !important;
+    font-size: 14px !important;
+    padding: 13px 24px !important;
+    border: none !important;
+    box-shadow: 0 6px 18px rgba(212, 92, 122, 0.4) !important;
+    transition: opacity 0.2s, box-shadow 0.2s !important;
+}
+
+.auth-left .cl-formButtonPrimary:hover {
+    opacity: 0.9 !important;
+    box-shadow: 0 8px 24px rgba(212, 92, 122, 0.55) !important;
+}
+
+/* Divider "or continue with" */
+.auth-left .cl-dividerText {
+    color: #d45c7a !important;
+    font-size: 13px !important;
+}
+
+.auth-left .cl-dividerLine {
+    background: #e8d0d8 !important;
+}
+
+/* Social login buttons — pill outline */
+.auth-left .cl-socialButtonsBlockButton {
+    border-radius: 50px !important;
+    border: 1.5px solid #d8d8d8 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.auth-left .cl-socialButtonsBlockButton:hover {
+    border-color: #d45c7a !important;
+    box-shadow: 0 2px 10px rgba(212, 92, 122, 0.15) !important;
+}
+
+/* Footer "Sign up for free" */
+.auth-left .cl-footerActionLink {
+    color: #d45c7a !important;
+    font-weight: 700 !important;
+}
+
+.auth-left .cl-footerActionText {
+    color: #888 !important;
+    font-size: 13px !important;
+}
+
+/* Password show/hide eye */
+.auth-left .cl-formFieldInputShowPasswordButton {
+    color: #d45c7a !important;
+}
+
+/* Internal card body padding */
+.auth-left .cl-main {
+    gap: 14px !important;
+}
+

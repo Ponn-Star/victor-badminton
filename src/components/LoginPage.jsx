@@ -16,13 +16,25 @@ function LoginPage() {
                         path="/login"
                         signUpUrl="/register"
                         afterSignInUrl="/"
+                        localization={{
+                            signIn: {
+                                start: {
+                                    title: 'Log In',
+                                    subtitle: 'Welcome back !!!',
+                                    actionText: "Don't have an account yet?",
+                                    actionLink: 'Sign up for free',
+                                },
+                            },
+                        }}
                         appearance={{
                             variables: {
                                 colorPrimary: '#d45c7a',
                                 colorBackground: 'transparent',
-                                colorInputBackground: '#edf4fb',
+                                colorInputBackground: '#c8dde8',
                                 colorInputText: '#1a1a2e',
-                                borderRadius: '10px',
+                                colorText: '#1a1a2e',
+                                colorTextSecondary: '#666',
+                                borderRadius: '8px',
                                 fontFamily: 'inherit',
                             },
                             elements: {
@@ -34,26 +46,18 @@ function LoginPage() {
                                     border: 'none',
                                     width: '100%',
                                 },
-                                headerTitle: {
-                                    fontSize: '2rem',
-                                    fontWeight: '900',
-                                    color: '#1a1a2e',
-                                },
-                                headerSubtitle: { color: '#888' },
                                 formButtonPrimary: {
-                                    backgroundColor: '#d45c7a',
+                                    background: 'linear-gradient(90deg, #e879a8 0%, #d45c7a 100%)',
                                     borderRadius: '50px',
                                     fontWeight: '700',
-                                    letterSpacing: '1px',
-                                    padding: '12px',
+                                    letterSpacing: '2px',
                                 },
                                 socialButtonsBlockButton: {
                                     borderRadius: '50px',
-                                    border: '2px solid #e0e0e0',
+                                    border: '1.5px solid #d8d8d8',
                                     backgroundColor: '#fff',
                                 },
-                                footerActionLink: { color: '#d45c7a', fontWeight: '600' },
-                                identityPreviewEditButton: { color: '#d45c7a' },
+                                footerActionLink: { color: '#d45c7a', fontWeight: '700' },
                             },
                         }}
                     />
