@@ -11,21 +11,14 @@ function RegisterPage() {
                     <div className="auth-brand-logo">
                         <img src={victorLogo} alt="Victor" />
                     </div>
+                    <p className="auth-welcome">Join us today 🏸</p>
+                    <h1 className="auth-title">Sign Up</h1>
+
                     <SignUp
                         routing="path"
                         path="/register"
                         signInUrl="/login"
                         afterSignUpUrl="/"
-                        localization={{
-                            signUp: {
-                                start: {
-                                    title: 'Sign Up',
-                                    subtitle: 'Create your account 🏸',
-                                    actionText: 'Already have an account?',
-                                    actionLink: 'Log in',
-                                },
-                            },
-                        }}
                         appearance={{
                             variables: {
                                 colorPrimary: '#d45c7a',
@@ -46,6 +39,8 @@ function RegisterPage() {
                                     border: 'none',
                                     width: '100%',
                                 },
+                                header:        { display: 'none' },
+                                logoBox:       { display: 'none' },
                                 formButtonPrimary: {
                                     background: 'linear-gradient(90deg, #e879a8 0%, #d45c7a 100%)',
                                     borderRadius: '50px',
