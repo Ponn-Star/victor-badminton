@@ -2,6 +2,9 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './ProductCatalog.css';
 import { API_BASE } from '../utils/api';
+import racketBanner from '../assets/racket.webp';
+import shoesBanner from '../assets/shoes.webp';
+import shuttleBanner from '../assets/shuttke.webp';
 
 function ProductCatalog({ onCompare, onViewDetail }) {
   const location = useLocation();
@@ -89,6 +92,14 @@ function ProductCatalog({ onCompare, onViewDetail }) {
 
            if (spec === '3U/G5') {
              return normalized.includes('3U/G5');
+           }
+
+           if (spec === '4U/G5') {
+             return normalized.includes('4U/G5');
+           }
+
+           if (spec === '4U/G6') {
+             return normalized.includes('4U/G6');
            }
 
            if (spec === '4U/G5-4U/G6') {
@@ -229,9 +240,11 @@ function ProductCatalog({ onCompare, onViewDetail }) {
     <section className="catalog-section">
       <div className="container">
         <div className="catalog-header">
-          <h1>
-            {productType === 'rackets' ? 'Lựa chọn cho mình vợt phù hợp nhất' : productType === 'shuttles' ? 'Lựa chọn cho mình cầu phù hợp nhất' : 'Lựa chọn cho mình giày phù hợp nhất'}
-          </h1>
+          <img
+            src={productType === 'rackets' ? racketBanner : productType === 'shuttles' ? shuttleBanner : shoesBanner}
+            alt={productType === 'rackets' ? 'Lựa chọn vợt phù hợp nhất' : productType === 'shuttles' ? 'Lựa chọn cầu phù hợp nhất' : 'Lựa chọn giày phù hợp nhất'}
+            className="catalog-header-banner"
+          />
         </div>
 
         <div className="catalog-wrapper">

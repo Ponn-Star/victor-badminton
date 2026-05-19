@@ -390,7 +390,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + PYROFIL + 46T PYROFIL + NANO AEROGEL + HARD CORED TECHNOLOGY",
     "sm": "High Resilience Modulus Graphite + PYROFIL + 6.6 SHAFT",
     "balance": "300mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-allaround8.webp",
     "performanceStats": {
       "power": "90%",
       "speed": "100%",

@@ -1062,3 +1062,130 @@
     .tab-toolbar { flex-direction: column; align-items: flex-start; }
     .admin-modal { max-height: 95vh; }
 }
+
+/* ── AI Chat Monitor — Mobile Responsive ───────────────────────────────── */
+@media (max-width: 600px) {
+    /* Header: stack health card + stats vertically */
+    .chat-monitor-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .chat-health-card {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 14px 16px;
+    }
+
+    /* Stats row: 2 columns grid */
+    .chat-stats-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .chat-stat-card {
+        min-width: 0;
+        padding: 12px 10px;
+    }
+
+    .chat-stat-card .stat-value {
+        font-size: 22px;
+    }
+
+    .chat-stat-card .stat-label {
+        font-size: 11px;
+    }
+
+    /* Filter toolbar */
+    .filter-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .filter-btn {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* Table: ẩn cột ít quan trọng, giữ scroll ngang */
+    .admin-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 12px;
+    }
+
+    /* Ẩn cột "TG phản hồi" và "#" trên mobile */
+    .admin-table th:nth-child(1),
+    .admin-table td:nth-child(1),
+    .admin-table th:nth-child(5),
+    .admin-table td:nth-child(5) {
+        display: none;
+    }
+
+    /* Thu hẹp cột thời gian */
+    .chat-time {
+        font-size: 11px;
+        white-space: normal;
+        min-width: 70px;
+    }
+
+    /* Giới hạn cột tin nhắn */
+    .chat-msg-cell {
+        max-width: 140px;
+        font-size: 12px;
+    }
+
+    /* Table font chung */
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 10px;
+        font-size: 12px;
+    }
+
+    /* Pagination */
+    .chat-pagination {
+        gap: 10px;
+        font-size: 13px;
+    }
+
+    .chat-pagination button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    /* Detail modal: full-screen on mobile */
+    .chat-detail-modal {
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0;
+        border-radius: 16px 16px 0 0;
+        max-height: 90dvh;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    /* Overlay căn bottom-sheet khi có chat-detail-modal */
+    .admin-overlay:has(.chat-detail-modal) {
+        align-items: flex-end;
+        padding: 0;
+    }
+
+    .chat-detail-meta {
+        gap: 8px;
+        font-size: 11px;
+    }
+
+    .chat-detail-bubble {
+        padding: 12px 14px;
+    }
+
+    .chat-detail-bubble p {
+        font-size: 13px;
+    }
+}
