@@ -58,18 +58,9 @@ function RegisterPage() {
                     />
                 </div>
 
-                {/* ── Right: Decoration panel ── */}
+                {/* Right: Athlete photo panel */}
                 <div className="auth-right">
-                    <div className="auth-bubble auth-bubble--1" />
-                    <div className="auth-bubble auth-bubble--2" />
-                    <div className="auth-bubble auth-bubble--3" />
-                    <div className="auth-bubble auth-bubble--4" />
-                    <div className="auth-right-content">
-                        <img src={victorLogo} alt="Victor" />
-                        <h2>VICTOR</h2>
-                        <p>Trang bị tốt nhất<br />cho đam mê cầu lông của bạn</p>
-                        <div className="auth-right-badge">🏸 Badminton Equipment</div>
-                    </div>
+                    <img src="/images/ZSW.webp" alt="Zheng Siwei" className="auth-right-photo" />
                 </div>
             </div>
         </div>
