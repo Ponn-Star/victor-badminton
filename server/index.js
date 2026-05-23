@@ -38,6 +38,8 @@ app.use(cors({
 app.use(express.json({ charset: 'utf-8' }));
 app.use(clerkMiddleware());
 
+app.get('/', (req, res) => res.json({ status: 'ok', message: 'Victor Backend is running' }));
+
 const chatLimiter = rateLimit({
     windowMs: 60 * 1000,
     max: 20,
