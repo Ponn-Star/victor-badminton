@@ -170,7 +170,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + Nano Fortify TR + HARD CORED TECHNOLOGY",
     "sm": "High Resilience Modulus Graphite + Metallic Carbon Fiber + PYROFIL + 5.8 SHAFT",
     "balance": "305mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-speed7.webp",
     "performanceStats": {
       "power": "80%",
       "speed": "90%",
@@ -190,7 +190,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + NANO AEROGEL + PBO High Performance Fiber + HARD CORED TECHNOLOGY",
     "sm": "High Resilience Modulus Graphite + PBO High Performance Fiber + PYROFIL + 6.8 SHAFT",
     "balance": "290+-5mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-speed7.webp",
     "performanceStats": {
       "power": "75%",
       "speed": "85%",
@@ -210,7 +210,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + TR + Nano Fortify TR + HARD CORED TECHNOLOGY",
     "sm": "High Resilience Modulus Graphite + Metallic Carbon Fiber + PYROFIL + 5.8 SHAFT",
     "balance": "307mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-speed7.webp",
     "performanceStats": {
       "power": "95%",
       "speed": "90%",
@@ -310,7 +310,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + NANO FORTIFY TR + HARD CORED TECHNOLOGY",
     "sm": "High Resilience Modulus Graphite + PYROFIL + 7.0 SHAFT",
     "balance": "295mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-speed7.webp",
     "performanceStats": {
       "power": "80%",
       "speed": "96%",
@@ -350,7 +350,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + Nano Resin + HARD CORED TECHNOLOGY",
     "sm": "High Resilience Modulus Graphite + PYROFIL + 6.6 SHAFT",
     "balance": "285mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-allaround8.webp",
     "performanceStats": {
       "power": "75%",
       "speed": "90%",
@@ -370,7 +370,7 @@ export default [
     "fm": "High Resilience Modulus Graphite + Metallic Carbon Fiber + PYROFIL + 6.8 SHAFT",
     "sm": "High Resilience Modulus Graphite + Metallic Carbon Fiber + NANO AEROGEL + Nano Fortify TR + HARD CORED TECHNOLOGY",
     "balance": "303mm",
-    "stiff": "/images/response-allaround7.webp",
+    "stiff": "/images/response-allaround8.webp",
     "performanceStats": {
       "power": "95%",
       "speed": "90%",

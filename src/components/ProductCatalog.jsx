@@ -463,16 +463,6 @@ function ProductCatalog({ onCompare, onViewDetail }) {
                       >
                         <span>COMPARE</span>
                       </button>
-                      <button 
-                        className="cart-icon-btn" 
-                        title="Add to cart"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          alert(`${product.name} đã được thêm vào giỏ hàng!`);
-                        }}
-                      >
-                        <span>🛒</span>
-                      </button>
                     </div>
                   </div>
                 </div>

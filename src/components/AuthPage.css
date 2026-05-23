@@ -1,17 +1,18 @@
 .auth-page {
-    min-height: 100dvh;
+    height: 100dvh;
+    overflow: hidden;
     display: grid;
     place-items: center;
     background:
         radial-gradient(circle at 24% 10%, rgba(255, 255, 255, 0.22), transparent 34%),
         linear-gradient(135deg, #91ccda 0%, #c3b9dc 48%, #ea8dcc 100%);
-    padding: clamp(24px, 7vh, 72px) clamp(18px, 9vw, 96px);
+    padding: 0 clamp(18px, 9vw, 96px);
 }
 
 .auth-split-card {
-    width: min(74.5vw, 960px);
-    min-width: 720px;
-    min-height: 458px;
+    width: min(76vw, 940px);
+    min-width: 820px;
+    height: min(620px, calc(100dvh - 48px));
     display: flex;
     overflow: hidden;
     background: #ffffff;
@@ -20,15 +21,17 @@
 }
 
 .auth-left {
-    flex: 0 0 66%;
+    flex: 0 0 58%;
     display: flex;
     align-items: flex-start;
     background: #ffffff;
-    padding: clamp(50px, 5.8vw, 64px) 46px 36px;
+    padding: clamp(28px, 4vh, 56px) 54px clamp(20px, 3vh, 44px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .auth-form-column {
-    width: 258px;
+    width: 316px;
     max-width: 100%;
 }
 
@@ -64,7 +67,7 @@
 }
 
 .auth-right {
-    flex: 0 0 34%;
+    flex: 0 0 42%;
     position: relative;
     min-width: 0;
     background: #ffffff;
@@ -90,14 +93,15 @@
 .auth-right-photo {
     position: absolute;
     z-index: 1;
-    left: -55%;
-    top: 1%;
-    width: 210%;
-    height: 100%;
+    left: -78%;
+    top: -2%;
+    width: 230%;
+    height: 106%;
     max-width: none;
     object-fit: contain;
     object-position: center;
     filter: saturate(1.04) contrast(1.02);
+    pointer-events: none;
 }
 
 .auth-login-form {
@@ -109,30 +113,30 @@
 .auth-field {
     position: relative;
     display: block;
-    margin: 0 0 10px;
+    margin: 0 0 14px;
 }
 
 .auth-field span {
     display: block;
     margin: 0 0 5px;
     color: #333333;
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 500;
     line-height: 1.2;
 }
 
 .auth-field input {
     width: 100%;
-    height: 25px;
-    padding: 0 10px;
+    height: 34px;
+    padding: 0 12px;
     border: 0;
     border-radius: 2px;
     outline: none;
     background: #c4deec;
     color: #111827;
     font: inherit;
-    font-size: 8px;
-    line-height: 25px;
+    font-size: 11px;
+    line-height: 34px;
     transition: background-color 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -153,9 +157,9 @@
 .auth-password-toggle {
     position: absolute;
     right: 8px;
-    top: 18px;
-    width: 18px;
-    height: 18px;
+    top: 25px;
+    width: 22px;
+    height: 22px;
     display: grid;
     place-items: center;
     border: 0;
@@ -165,8 +169,8 @@
 }
 
 .auth-eye-icon {
-    width: 13px;
-    height: 13px;
+    width: 15px;
+    height: 15px;
 }
 
 .auth-forgot-link {
@@ -174,31 +178,31 @@
     right: 0;
     top: 0;
     color: #9d9d9d;
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 500;
 }
 
 .auth-error {
     margin: 1px 0 8px;
     color: #c0395f;
-    font-size: 8px;
+    font-size: 10px;
     line-height: 1.35;
 }
 
 .auth-login-button {
-    width: 89px;
-    height: 25px;
-    margin: 11px auto 16px;
-    padding: 0 13px;
+    width: 114px;
+    height: 34px;
+    margin: 14px auto 18px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
+    gap: 0;
     border: 0;
     border-radius: 999px;
     background: #d87499;
     color: #ffffff;
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 700;
     line-height: 1;
     transition: transform 0.18s ease, background-color 0.18s ease;
@@ -214,23 +218,19 @@
     opacity: 0.66;
 }
 
-.auth-button-arrow {
-    font-size: 9px;
-}
-
 .auth-divider {
-    margin: 0 0 14px;
+    margin: 0 0 16px;
     color: #8aaac0;
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 500;
     line-height: 1;
     text-align: center;
 }
 
 .auth-google-button {
-    width: 68px;
-    height: 27px;
-    margin: 0 auto 16px;
+    width: 90px;
+    height: 34px;
+    margin: 0 auto 18px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -264,18 +264,18 @@
 }
 
 .auth-google-icon {
-    width: 14px;
-    height: 14px;
+    width: 17px;
+    height: 17px;
 }
 
 .auth-switch {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
     margin: 0;
     color: #888888;
-    font-size: 8px;
+    font-size: 10px;
     line-height: 1.2;
     white-space: nowrap;
 }
@@ -294,6 +294,7 @@
     max-width: 100% !important;
     min-width: 0 !important;
     box-shadow: none !important;
+    overflow: visible !important;
 }
 
 .auth-left .cl-card,
@@ -302,10 +303,13 @@
     padding: 0 !important;
     border: 0 !important;
     background: transparent !important;
+    overflow: visible !important;
 }
 
 .auth-left .cl-main {
     gap: 0 !important;
+    width: 100% !important;
+    overflow: visible !important;
 }
 
 .auth-left .cl-header,
@@ -346,15 +350,15 @@
 
 .auth-left .cl-formFieldInput {
     width: 100% !important;
-    height: 25px !important;
-    min-height: 25px !important;
-    padding: 0 10px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 12px !important;
     border: 0 !important;
     border-radius: 2px !important;
     background: #c4deec !important;
     color: #111827 !important;
-    font-size: 8px !important;
-    line-height: 25px !important;
+    font-size: 11px !important;
+    line-height: 34px !important;
     box-shadow: none !important;
     outline: none !important;
 }
@@ -372,15 +376,15 @@
 
 .auth-left .cl-formButtonPrimary {
     position: relative !important;
-    width: 81px !important;
-    height: 25px !important;
-    min-height: 25px !important;
-    margin: 12px auto 16px !important;
-    padding: 0 13px !important;
+    width: 110px !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    margin: 14px auto 18px !important;
+    padding: 0 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 7px !important;
+    gap: 0 !important;
     border: 0 !important;
     border-radius: 999px !important;
     background: #d87499 !important;
@@ -392,24 +396,24 @@
     transition: transform 0.18s ease, background-color 0.18s ease !important;
 }
 
+.auth-left .cl-formButtonPrimary > * {
+    display: none !important;
+}
+
 .auth-left .cl-formButtonPrimary::before {
     content: "LOGIN";
     color: #ffffff;
-    font-size: 8px;
+    font-size: 10px;
     font-weight: 700;
     line-height: 1;
 }
 
 .auth-left .cl-formButtonPrimary::after {
-    content: "->";
-    color: #ffffff;
-    font-size: 9px;
-    font-weight: 700;
-    line-height: 1;
+    content: none;
 }
 
 .auth-page--register .auth-left .cl-formButtonPrimary {
-    width: 96px !important;
+    width: 120px !important;
 }
 
 .auth-page--register .auth-left .cl-formButtonPrimary::before {
@@ -431,33 +435,38 @@
 
 .auth-left .cl-dividerText {
     color: #8aaac0 !important;
-    font-size: 8px !important;
+    font-size: 10px !important;
     font-weight: 500 !important;
     line-height: 1 !important;
 }
 
 .auth-left .cl-socialButtons,
+.auth-left .cl-socialButtonsRoot,
 .auth-left .cl-socialButtonsBlockButtonGroup {
     display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
+    flex-direction: column !important;
+    align-items: center !important;
     gap: 6px !important;
+    width: 100% !important;
     margin: 0 0 16px !important;
+    overflow: visible !important;
 }
 
 .auth-left .cl-socialButtonsBlockButton {
-    width: 44px !important;
-    flex: 0 0 44px !important;
-    height: 27px !important;
-    min-height: 27px !important;
-    padding: 0 !important;
+    width: min(240px, 100%) !important;
+    height: 34px !important;
+    min-height: 34px !important;
+    padding: 0 20px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    gap: 8px !important;
     border: 1px solid #7fb8e1 !important;
     border-radius: 999px !important;
     background: #ffffff !important;
     box-shadow: none !important;
+    overflow: visible !important;
+    box-sizing: border-box !important;
 }
 
 .auth-left .cl-socialButtonsBlockButton:hover {
@@ -466,12 +475,16 @@
 }
 
 .auth-left .cl-socialButtonsBlockButtonText {
-    display: none !important;
+    display: inline !important;
+    font-size: 11px !important;
+    font-weight: 500 !important;
+    color: #1f2937 !important;
 }
 
 .auth-left .cl-socialButtonsProviderIcon {
-    width: 14px !important;
-    height: 14px !important;
+    width: 17px !important;
+    height: 17px !important;
+    flex-shrink: 0 !important;
 }
 
 .auth-left .cl-footer {
@@ -488,12 +501,12 @@
 
 .auth-left .cl-footerActionText {
     color: #888888 !important;
-    font-size: 8px !important;
+    font-size: 10px !important;
 }
 
 .auth-left .cl-footerActionLink {
     color: #d87499 !important;
-    font-size: 8px !important;
+    font-size: 10px !important;
     font-weight: 600 !important;
 }
 

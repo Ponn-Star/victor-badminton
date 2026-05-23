@@ -17,6 +17,10 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Test/headless browser artifacts
+.chrome-headless-hero/
+hero-check.png
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
