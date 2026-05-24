@@ -12,10 +12,31 @@ import chatRoutes from "./routes/chat.js";
 import Product from "./models/Product.js";
 import ChatLog from "./models/ChatLog.js";
 
-// ─── Kết nối MongoDB ────────────────────────────────────────────────────────
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ MongoDB connected:', process.env.MONGODB_URI))
-    .catch(err => console.error('❌ MongoDB connection error:', err.message));
+// ─── Kết nối MongoDB (serverless-safe) ──────────────────────────────────────
+let connectionPromise = null;
+
+async function ensureConnected() {
+    if (mongoose.connection.readyState === 1) return; // đang kết nối
+    if (!connectionPromise) {
+        connectionPromise = mongoose.connect(process.env.MONGODB_URI, {
+            bufferCommands: false,
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
+        }).then(() => {
+            console.log('✅ MongoDB connected');
+            connectionPromise = null;
+        }).catch((err) => {
+            console.error('❌ MongoDB connection error:', err.message);
+            connectionPromise = null;
+            throw err;
+        });
+    }
+    return connectionPromise;
+}
+
+// Kết nối ban đầu khi module load
+ensureConnected().catch(() => {});
 
 const app = express();
 const extraOrigins = (process.env.CLIENT_URL || '').split(',').map((o) => o.trim()).filter(Boolean);
@@ -41,6 +62,16 @@ app.use(cors({
 }));
 app.use(express.json({ charset: 'utf-8' }));
 app.use(clerkMiddleware());
+
+// Đảm bảo MongoDB đã kết nối trước mỗi request (quan trọng với serverless)
+app.use(async (req, res, next) => {
+    try {
+        await ensureConnected();
+        next();
+    } catch {
+        res.status(503).json({ error: 'Database connection failed. Please try again.' });
+    }
+});
 
 app.get('/', (req, res) => res.json({ status: 'ok', message: 'Victor Backend is running' }));
 

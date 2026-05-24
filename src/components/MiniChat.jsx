@@ -2,6 +2,10 @@ import { useState, useRef, useEffect } from 'react';
 import './MiniChat.css';
 
 const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+// Chat stream gọi thẳng backend để SSE hoạt động (không qua proxy Vercel)
+const CHAT_API_BASE = import.meta.env.VITE_API_URL
+  ? (import.meta.env.VITE_API_URL || '').replace(/\/$/, '')
+  : (import.meta.env.PROD ? 'https://victor-backend-eight.vercel.app' : '');
 
 function MiniChat() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +54,7 @@ function MiniChat() {
     setMessages(nextMessages);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/chat/stream`, {
+      const response = await fetch(`${CHAT_API_BASE}/api/chat/stream`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
