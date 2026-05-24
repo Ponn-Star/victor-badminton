@@ -5,7 +5,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/server"
+      "dest": "https://victor-backend-eight.vercel.app/api/$1"
     },
     {
       "handle": "filesystem"
