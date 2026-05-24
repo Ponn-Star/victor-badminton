@@ -28,7 +28,12 @@ function CompareTool({ isOpen, onClose, items, onRemove }) {
           const products = await response.json();
           if (!Array.isArray(products)) continue;
 
-          const found = products.find(p => p.SKU === item.SKU || p.name === item.name);
+          const found = products.find(p => {
+            if (item._id && p._id && String(p._id) === String(item._id)) return true;
+            if (item.SKU && p.SKU && p.SKU === item.SKU) return true;
+            if (item.sku && p.sku && p.sku === item.sku) return true;
+            return !!(item.name && p.name && p.name === item.name);
+          });
           if (found) details[item.id] = found;
         }
 
