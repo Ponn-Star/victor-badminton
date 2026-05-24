@@ -28,6 +28,10 @@ app.use(cors({
         if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
             return callback(null, true);
         }
+        // Allow Vercel preview/production deployments for this project
+        if (/^https:\/\/victor-badminton(-[a-z0-9-]+)?\.vercel\.app$/.test(origin)) {
+            return callback(null, true);
+        }
         // Allow extra origins from CLIENT_URL env
         if (extraOrigins.includes(origin)) return callback(null, true);
 
