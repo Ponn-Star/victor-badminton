@@ -1,6 +1,6 @@
 # Victor – Website Giới Thiệu & Quản Lý Sản Phẩm Cầu Lông
 
-Dự án web full-stack giới thiệu sản phẩm, vận động viên và tư vấn mua sắm cho thương hiệu cầu lông **VICTOR**.
+Là website giới thiệu sản phẩm, vận động viên và tư vấn mua sắm cho thương hiệu cầu lông **VICTOR**.
 
 ## Tổng Quan
 
