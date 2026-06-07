@@ -16,17 +16,20 @@ function SearchModal({ isOpen, onClose, onViewDetail }) {
     const searchProducts = async () => {
       setLoading(true);
       try {
-        const [racketsResponse, shuttlesResponse] = await Promise.all([
+        const [racketsResponse, shuttlesResponse, shoesResponse] = await Promise.all([
           fetch(`${API_BASE}/api/products/rackets`),
-          fetch(`${API_BASE}/api/products/shuttles`)
+          fetch(`${API_BASE}/api/products/shuttles`),
+          fetch(`${API_BASE}/api/products/shoes`)
         ]);
 
         const racketsData = (await racketsResponse.json()) || [];
         const shuttlesData = (await shuttlesResponse.json()) || [];
+        const shoesData = (await shoesResponse.json()) || [];
 
         const allProducts = [
           ...racketsData.map(p => ({ ...p, productType: 'rackets' })),
-          ...shuttlesData.map(p => ({ ...p, productType: 'shuttles' }))
+          ...shuttlesData.map(p => ({ ...p, productType: 'shuttles' })),
+          ...shoesData.map(p => ({ ...p, productType: 'shoes' }))
         ];
 
         const filtered = allProducts.filter(product =>
@@ -96,7 +99,7 @@ function SearchModal({ isOpen, onClose, onViewDetail }) {
                       <div className="result-info">
                         <div className="result-name">{product.name}</div>
                         <div className="result-series">
-                          {product.series} • {product.productType === 'rackets' ? '🎾 Vợt' : '🏸 Cầu'}
+                          {product.series} • {product.productType === 'rackets' ? '🎾 Vợt' : product.productType === 'shuttles' ? '🏸 Cầu' : '👟 Giày'}
                         </div>
                         {product.price && (
                           <div className="result-price">

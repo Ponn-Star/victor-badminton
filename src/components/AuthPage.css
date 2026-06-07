@@ -527,12 +527,13 @@
         min-width: 0;
         flex-direction: column;
         border-radius: 18px;
+        height: auto;
     }
 
     .auth-left {
         flex: none;
         justify-content: center;
-        padding: 38px 28px 30px;
+        padding: 38px 28px 38px;
     }
 
     .auth-form-column {
@@ -540,21 +541,16 @@
     }
 
     .auth-right {
-        flex: none;
-        height: 260px;
+        display: none;
     }
 }
 
 @media (max-width: 420px) {
     .auth-left {
-        padding: 34px 22px 28px;
+        padding: 34px 22px 32px;
     }
 
     .auth-title {
         font-size: 30px;
-    }
-
-    .auth-right {
-        height: 220px;
     }
 }

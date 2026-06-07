@@ -180,23 +180,23 @@ function ProductCatalog({ onCompare, onViewDetail }) {
   const getSpecLabel = (field) => {
     if (productType === 'rackets') {
       switch(field) {
-        case 'spec1': return 'Weight';
-        case 'spec2': return 'Balance';
+        case 'spec1': return 'Trọng lượng';
+        case 'spec2': return 'Điểm cân bằng';
         case 'spec3': return 'LBS';
         default: return '';
       }
     } else if (productType === 'shuttles') {
       switch(field) {
-        case 'spec1': return 'Type';
-        case 'spec2': return 'Speed';
-        case 'spec3': return 'Unit';
+        case 'spec1': return 'Loại';
+        case 'spec2': return 'Tốc độ';
+        case 'spec3': return 'Số lượng';
         default: return '';
       }
     } else if (productType === 'shoes') {
       switch(field) {
-        case 'spec1': return 'Outsole';
-        case 'spec2': return 'Upper';
-        case 'spec3': return 'Size';
+        case 'spec1': return 'Đế ngoài';
+        case 'spec2': return 'Thân giày';
+        case 'spec3': return 'Cỡ giày';
         default: return '';
       }
     }
