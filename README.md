@@ -24,21 +24,6 @@ Victor là ứng dụng web kết hợp catalogue sản phẩm, thông tin vận
 - API serverless trên Vercel
 - Backend local chạy cổng 5000
 
-## Cấu Trúc Dự Án
-
-```
-├── src/                  # Frontend React
-│   ├── components/       # Các component UI
-│   ├── context/          # AuthContext
-│   └── utils/            # API utilities
-├── server/               # Backend Express
-│   ├── models/           # Mongoose models (Product, Athlete, ChatLog)
-│   ├── routes/           # API routes
-│   ├── data/             # Dữ liệu seed
-│   └── scripts/          # Script seed database
-└── api/                  # Serverless entry cho Vercel
-```
-
 ## Chức Năng Chính
 
 ### Người dùng
@@ -97,12 +82,4 @@ npm run start
 
 # Hoặc chạy riêng
 npm run dev          # Frontend: http://localhost:5173
-npm run server       # Backend:  http://localhost:5000
-```
-
-## Dữ Liệu
-
-Database MongoDB gồm 3 collection:
-- **Product**: 59 sản phẩm (20 vợt, 15 giày, 24 quả cầu)
-- **Athlete**: 24 vận động viên Team Victor
-- **ChatLog**: lưu lịch sử hội thoại AI
+node index.js        # Backend:  http://localhost:5000
