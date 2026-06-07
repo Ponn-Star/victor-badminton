@@ -24,6 +24,21 @@ Victor là ứng dụng web kết hợp catalogue sản phẩm, thông tin vận
 - API serverless trên Vercel
 - Backend local chạy cổng 5000
 
+## Cấu Trúc Dự Án
+
+```
+├── src/                  # Frontend React
+│   ├── components/       # Các component UI
+│   ├── context/          # AuthContext
+│   └── utils/            # API utilities
+├── server/               # Backend Express
+│   ├── models/           # Mongoose models (Product, Athlete, ChatLog)
+│   ├── routes/           # API routes
+│   ├── data/             # Dữ liệu seed
+│   └── scripts/          # Script seed database
+└── api/                  # Serverless entry cho Vercel
+```
+
 ## Chức Năng Chính
 
 ### Người dùng
@@ -41,21 +56,6 @@ Victor là ứng dụng web kết hợp catalogue sản phẩm, thông tin vận
 - Quản lý sản phẩm: xem, thêm, sửa, xóa mềm, khôi phục
 - Quản lý vận động viên: xem, thêm, sửa, xóa mềm
 - Chat log: xem lịch sử chat, thống kê, trạng thái kết nối Groq
-
-## Cấu Trúc Dự Án
-
-```
-├── src/                  # Frontend React
-│   ├── components/       # Các component UI
-│   ├── context/          # AuthContext
-│   └── utils/            # API utilities
-├── server/               # Backend Express
-│   ├── models/           # Mongoose models (Product, Athlete, ChatLog)
-│   ├── routes/           # API routes
-│   ├── data/             # Dữ liệu seed
-│   └── scripts/          # Script seed database
-└── api/                  # Serverless entry cho Vercel
-```
 
 ## Cài Đặt & Chạy Local
 
@@ -87,7 +87,7 @@ CLIENT_URL=http://localhost:5173
 ```bash
 # Cài dependencies
 npm install
-cd server && npm install && cd ..
+cd server && npm install
 
 # Seed dữ liệu (lần đầu)
 node server/scripts/seed.js
