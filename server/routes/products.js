@@ -107,6 +107,21 @@ router.delete('/:id', requireAuth(), async (req, res) => {
     }
 });
 
+// ─── ADMIN: HARD DELETE — Xóa vĩnh viễn khỏi DB ───────────────────────────────
+router.delete('/:id/permanent', requireAuth(), async (req, res) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!await isAdminUser(userId)) return res.status(403).json({ message: 'Không có quyền.' });
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ message: 'Sản phẩm không tồn tại.' });
+        if (product.isActive) return res.status(400).json({ message: 'Chỉ được xóa vĩnh viễn sản phẩm đang ẩn.' });
+        await Product.findByIdAndDelete(req.params.id);
+        res.json({ message: 'Đã xóa vĩnh viễn sản phẩm.' });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 // ─── ADMIN: RESTORE — Khôi phục sản phẩm đã xóa ─────────────────────────────
 router.patch('/:id/restore', requireAuth(), async (req, res) => {
     try {

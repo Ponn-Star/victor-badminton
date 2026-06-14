@@ -543,6 +543,20 @@
 
 .btn-restore:hover { opacity: 0.75; }
 
+.btn-permanent-delete {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: #7f1d1d;
+    color: #fff;
+    transition: opacity 0.2s;
+}
+
+.btn-permanent-delete:hover { opacity: 0.8; }
+
 .table-count {
     padding: 12px 16px;
     font-size: 13px;
@@ -671,6 +685,68 @@
 .form-group textarea:focus { border-color: #003DA5; }
 
 .form-group textarea { resize: vertical; min-height: 72px; }
+
+/* ── Image Upload Field ──────────────────────────────────────────────────── */
+.img-upload-group { grid-column: 1 / -1; }
+
+.img-upload-wrap {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.img-preview-thumb {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e0e8ff;
+    flex-shrink: 0;
+}
+
+.img-upload-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.btn-upload-file {
+    padding: 8px 14px;
+    background: #003DA5;
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.2s;
+}
+.btn-upload-file:hover:not(:disabled) { background: #0050cc; }
+.btn-upload-file:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.img-or-text {
+    font-size: 12px;
+    color: #888;
+    white-space: nowrap;
+}
+
+.img-url-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 8px 12px;
+    border: 2px solid #e0e8ff;
+    border-radius: 7px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    background: #fafcff;
+    transition: border-color 0.2s;
+}
+.img-url-input:focus { border-color: #003DA5; }
 
 /* ── Confirm Dialog ──────────────────────────────────────────────────────── */
 .admin-confirm {

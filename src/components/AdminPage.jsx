@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './AdminPage.css';
@@ -11,10 +11,16 @@ const ATH_API  = `${API_BASE}/api/athletes`;
 const TYPE_LABELS = { racket: 'Vợt cầu lông', shoes: 'Giày', shuttle: 'Cầu lông' };
 
 const EMPTY_PRODUCT = {
-    name: '', series: '', type: 'racket', price: '', priceDisplay: '',
-    description: '', img: '', features: '', weight: '', balance: '',
-    flex: '', material: '', maxTension: '', color: '', size: '',
-    sole: '', cushion: '', speed: '', feather: '', quantity: '', isActive: true,
+    name: '', series: '', SKU: '', status: 'racket', price: '',
+    img: '',
+    // Racket
+    weightString: '', lbs: '', fm: '', sm: '', balance: '',
+    performanceStats: { power: '', speed: '', control: '' },
+    // Shoes
+    colors: '', outsole: '', midsole: '', upper: '', size: '',
+    // Shuttle
+    shuttleType: '', headMaterial: '', speed: '', unit: '',
+    isActive: true,
 };
 
 const EMPTY_ATHLETE = {
@@ -51,8 +57,102 @@ function ConfirmDialog({ message, onConfirm, onCancel }) {
     );
 }
 
+// ── Image Upload Field ────────────────────────────────────────────────────────
+function ImageUploadField({ label, value, onChange, getToken }) {
+    const [preview, setPreview] = useState('');
+    const [uploading, setUploading] = useState(false);
+    const inputRef = useRef(null);
+
+    useEffect(() => { setPreview(value || ''); }, [value]);
+
+    const resolvePreview = (url) => {
+        if (!url) return '';
+        if (url.startsWith('http') || url.startsWith('blob:')) return url;
+        return `${API_BASE}${url}`;
+    };
+
+    const handleFile = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const blobUrl = URL.createObjectURL(file);
+        setPreview(blobUrl);
+        setUploading(true);
+        try {
+            const token = await getToken();
+            const fd = new FormData();
+            fd.append('image', file);
+            const res = await fetch(`${API_BASE}/api/upload`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+                body: fd,
+            });
+            const data = await res.json();
+            if (res.ok) {
+                onChange(data.url);
+            } else {
+                alert(data.error || 'Upload thất bại');
+                setPreview(resolvePreview(value));
+            }
+        } catch {
+            alert('Lỗi kết nối khi upload ảnh');
+            setPreview(resolvePreview(value));
+        } finally {
+            setUploading(false);
+            URL.revokeObjectURL(blobUrl);
+        }
+        e.target.value = '';
+    };
+
+    const handleUrlChange = (e) => {
+        const url = e.target.value;
+        onChange(url);
+        setPreview(url);
+    };
+
+    return (
+        <div className="form-group img-upload-group">
+            <label>{label}</label>
+            <div className="img-upload-wrap">
+                {preview && (
+                    <img
+                        src={resolvePreview(preview)}
+                        alt="preview"
+                        className="img-preview-thumb"
+                        onError={() => setPreview('')}
+                    />
+                )}
+                <div className="img-upload-controls">
+                    <button
+                        type="button"
+                        className="btn-upload-file"
+                        onClick={() => inputRef.current?.click()}
+                        disabled={uploading}
+                    >
+                        {uploading ? '⏳ Đang tải...' : '📁 Chọn từ máy'}
+                    </button>
+                    <input
+                        ref={inputRef}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        onChange={handleFile}
+                    />
+                    <span className="img-or-text">hoặc URL:</span>
+                    <input
+                        type="text"
+                        className="img-url-input"
+                        value={value || ''}
+                        onChange={handleUrlChange}
+                        placeholder="https://... hoặc /images/..."
+                    />
+                </div>
+            </div>
+        </div>
+    );
+}
+
 // ── Product Form Modal ───────────────────────────────────────────────────────
-function ProductModal({ form, onChange, onSubmit, onClose, editMode }) {
+function ProductModal({ form, onChange, onStatsChange, onImgChange, onSubmit, onClose, editMode, getToken }) {
     return (
         <div className="admin-overlay" onClick={onClose}>
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
@@ -62,13 +162,14 @@ function ProductModal({ form, onChange, onSubmit, onClose, editMode }) {
                 </div>
                 <div className="modal-body">
                     <div className="form-grid">
+                        {/* ── Chung ── */}
                         <div className="form-group">
                             <label>Tên sản phẩm *</label>
-                            <input name="name" value={form.name} onChange={onChange} placeholder="Vợt Victor Thruster K 9900" />
+                            <input name="name" value={form.name} onChange={onChange} placeholder="DriveX 12 ZSW J" />
                         </div>
                         <div className="form-group">
                             <label>Loại sản phẩm *</label>
-                            <select name="type" value={form.type} onChange={onChange}>
+                            <select name="status" value={form.status} onChange={onChange}>
                                 <option value="racket">Vợt cầu lông</option>
                                 <option value="shoes">Giày</option>
                                 <option value="shuttle">Cầu lông</option>
@@ -76,56 +177,114 @@ function ProductModal({ form, onChange, onSubmit, onClose, editMode }) {
                         </div>
                         <div className="form-group">
                             <label>Series</label>
-                            <input name="series" value={form.series} onChange={onChange} placeholder="Thruster K" />
+                            <input name="series" value={form.series} onChange={onChange} placeholder="Drive X" />
                         </div>
                         <div className="form-group">
-                            <label>Giá (số)</label>
-                            <input name="price" type="number" value={form.price} onChange={onChange} placeholder="3500000" />
+                            <label>SKU</label>
+                            <input name="SKU" value={form.SKU} onChange={onChange} placeholder="DX-12 ZSW J" />
                         </div>
                         <div className="form-group">
-                            <label>Giá hiển thị</label>
-                            <input name="priceDisplay" value={form.priceDisplay} onChange={onChange} placeholder="3.500.000 đ" />
-                        </div>
-                        <div className="form-group">
-                            <label>Hình ảnh (URL)</label>
-                            <input name="img" value={form.img} onChange={onChange} placeholder="https://..." />
-                        </div>
-                        <div className="form-group form-full">
-                            <label>Mô tả</label>
-                            <textarea name="description" value={form.description} onChange={onChange} rows={3} placeholder="Mô tả sản phẩm..." />
-                        </div>
-                        {/* Racket fields */}
-                        {form.type === 'racket' && <>
-                            <div className="form-group"><label>Trọng lượng</label><input name="weight" value={form.weight} onChange={onChange} placeholder="88g" /></div>
-                            <div className="form-group"><label>Điểm cân bằng</label><input name="balance" value={form.balance} onChange={onChange} placeholder="Head-Heavy" /></div>
-                            <div className="form-group"><label>Độ uốn</label><input name="flex" value={form.flex} onChange={onChange} placeholder="Extra Stiff" /></div>
-                            <div className="form-group"><label>Chất liệu</label><input name="material" value={form.material} onChange={onChange} placeholder="Nano Carbon" /></div>
-                            <div className="form-group"><label>Độ căng tối đa</label><input name="maxTension" value={form.maxTension} onChange={onChange} placeholder="35 lbs" /></div>
-                        </>}
-                        {/* Shoes fields */}
-                        {form.type === 'shoes' && <>
-                            <div className="form-group"><label>Màu sắc</label><input name="color" value={form.color} onChange={onChange} placeholder="Trắng/Xanh" /></div>
-                            <div className="form-group"><label>Size</label><input name="size" value={form.size} onChange={onChange} placeholder="36-45" /></div>
-                            <div className="form-group"><label>Đế giày</label><input name="sole" value={form.sole} onChange={onChange} placeholder="Gum Rubber" /></div>
-                            <div className="form-group"><label>Đệm</label><input name="cushion" value={form.cushion} onChange={onChange} placeholder="Energy Max" /></div>
-                        </>}
-                        {/* Shuttle fields */}
-                        {form.type === 'shuttle' && <>
-                            <div className="form-group"><label>Tốc độ</label><input name="speed" value={form.speed} onChange={onChange} placeholder="75-79" /></div>
-                            <div className="form-group"><label>Lông vũ</label><input name="feather" value={form.feather} onChange={onChange} placeholder="Vịt tổng hợp" /></div>
-                            <div className="form-group"><label>Số lượng/hộp</label><input name="quantity" value={form.quantity} onChange={onChange} placeholder="12" /></div>
-                        </>}
-                        <div className="form-group">
-                            <label>Đặc tính (phân cách bởi dấu phẩy)</label>
-                            <input name="features" value={form.features} onChange={onChange} placeholder="Công suất cao, Kiểm soát tốt" />
+                            <label>Giá (VNĐ) *</label>
+                            <input name="price" type="number" value={form.price} onChange={onChange} placeholder="5300000" />
                         </div>
                         <div className="form-group">
                             <label>Trạng thái</label>
-                            <select name="isActive" value={form.isActive} onChange={e => onChange({ target: { name: 'isActive', value: e.target.value === 'true' } })}>
+                            <select name="isActive" value={form.isActive}
+                                onChange={e => onChange({ target: { name: 'isActive', value: e.target.value === 'true' } })}>
                                 <option value="true">Hiển thị</option>
                                 <option value="false">Ẩn</option>
                             </select>
                         </div>
+
+                        {/* ── Ảnh ── */}
+                        <div className="form-full">
+                            <ImageUploadField
+                                label="Ảnh đại diện"
+                                value={form.img}
+                                onChange={url => onImgChange('img', url)}
+                                getToken={getToken}
+                            />
+                        </div>
+
+                        {/* ── Vợt ── */}
+                        {form.status === 'racket' && <>
+                            <div className="form-group">
+                                <label>Trọng lượng / Grip (w/s)</label>
+                                <input name="weightString" value={form.weightString} onChange={onChange} placeholder="4U/G5" />
+                            </div>
+                            <div className="form-group">
+                                <label>Độ căng tối đa (lbs)</label>
+                                <input name="lbs" value={form.lbs} onChange={onChange} placeholder="≤ 32 lbs (14.5kg)" />
+                            </div>
+                            <div className="form-group">
+                                <label>Điểm cân bằng (balance)</label>
+                                <input name="balance" value={form.balance} onChange={onChange} placeholder="303mm" />
+                            </div>
+                            <div className="form-group form-full">
+                                <label>Chất liệu khung (Frame Material)</label>
+                                <input name="fm" value={form.fm} onChange={onChange} placeholder="High Resilience Modulus Graphite + PYROFIL" />
+                            </div>
+                            <div className="form-group form-full">
+                                <label>Chất liệu thân (Shaft Material)</label>
+                                <input name="sm" value={form.sm} onChange={onChange} placeholder="High Resilience Modulus Graphite + 6.6 SHAFT" />
+                            </div>
+                            <div className="form-group">
+                                <label>Sức mạnh – Power (%)</label>
+                                <input name="power" value={form.performanceStats.power} onChange={onStatsChange} placeholder="85%" />
+                            </div>
+                            <div className="form-group">
+                                <label>Tốc độ – Speed (%)</label>
+                                <input name="speed" value={form.performanceStats.speed} onChange={onStatsChange} placeholder="100%" />
+                            </div>
+                            <div className="form-group">
+                                <label>Kiểm soát – Control (%)</label>
+                                <input name="control" value={form.performanceStats.control} onChange={onStatsChange} placeholder="100%" />
+                            </div>
+                        </>}
+
+                        {/* ── Giày ── */}
+                        {form.status === 'shoes' && <>
+                            <div className="form-group">
+                                <label>Màu sắc (phân cách dấu phẩy)</label>
+                                <input name="colors" value={form.colors} onChange={onChange} placeholder="Trắng, Đỏ" />
+                            </div>
+                            <div className="form-group">
+                                <label>Size</label>
+                                <input name="size" value={form.size} onChange={onChange} placeholder="EUR35-47 220-305mm" />
+                            </div>
+                            <div className="form-group form-full">
+                                <label>Đế ngoài (Outsole)</label>
+                                <input name="outsole" value={form.outsole} onChange={onChange} placeholder="VSR Rubber" />
+                            </div>
+                            <div className="form-group form-full">
+                                <label>Đế giữa (Midsole)</label>
+                                <input name="midsole" value={form.midsole} onChange={onChange} placeholder="NitroLite Midsole+TPU+EzCiclo Carbon" />
+                            </div>
+                            <div className="form-group form-full">
+                                <label>Mặt trên (Upper)</label>
+                                <input name="upper" value={form.upper} onChange={onChange} placeholder="Microfiber PU Leather+V-Tough+Double Mesh" />
+                            </div>
+                        </>}
+
+                        {/* ── Cầu lông ── */}
+                        {form.status === 'shuttle' && <>
+                            <div className="form-group">
+                                <label>Loại lông (Type)</label>
+                                <input name="shuttleType" value={form.shuttleType} onChange={onChange} placeholder="Duck Feather / Goose Feather / LDPE" />
+                            </div>
+                            <div className="form-group">
+                                <label>Chất liệu đầu (Head Material)</label>
+                                <input name="headMaterial" value={form.headMaterial} onChange={onChange} placeholder="Composite Cork / Full Cork" />
+                            </div>
+                            <div className="form-group">
+                                <label>Tốc độ (Speed)</label>
+                                <input name="speed" value={form.speed} onChange={onChange} placeholder="76 / 77 / 78" />
+                            </div>
+                            <div className="form-group">
+                                <label>Đơn vị đóng gói (Unit)</label>
+                                <input name="unit" value={form.unit} onChange={onChange} placeholder="Dozen / 12 PCS / 3 in a tube" />
+                            </div>
+                        </>}
                     </div>
                 </div>
                 <div className="modal-footer">
@@ -139,8 +298,7 @@ function ProductModal({ form, onChange, onSubmit, onClose, editMode }) {
     );
 }
 
-// ── Athlete Form Modal ───────────────────────────────────────────────────────
-function AthleteModal({ form, onChange, onSubmit, onClose, editMode }) {
+function AthleteModal({ form, onChange, onImgChange, onSubmit, onClose, editMode, getToken }) {
     return (
         <div className="admin-overlay" onClick={onClose}>
             <div className="admin-modal" onClick={e => e.stopPropagation()}>
@@ -152,38 +310,47 @@ function AthleteModal({ form, onChange, onSubmit, onClose, editMode }) {
                     <div className="form-grid">
                         <div className="form-group">
                             <label>Tên VĐV *</label>
-                            <input name="name" value={form.name} onChange={onChange} placeholder="Nguyễn Hải Đăng" />
+                            <input name="name" value={form.name} onChange={onChange} placeholder="Zheng Si Wei" />
                         </div>
                         <div className="form-group">
                             <label>Slug (URL) *</label>
-                            <input name="slug" value={form.slug} onChange={onChange} placeholder="nguyen-hai-dang" />
+                            <input name="slug" value={form.slug} onChange={onChange} placeholder="zhengsiwei" />
                         </div>
                         <div className="form-group">
                             <label>Quốc gia</label>
-                            <input name="country" value={form.country} onChange={onChange} placeholder="Việt Nam" />
+                            <input name="country" value={form.country} onChange={onChange} placeholder="China" />
                         </div>
                         <div className="form-group">
                             <label>Hạng cao nhất</label>
-                            <input name="careerHigh" value={form.careerHigh} onChange={onChange} placeholder="#45 Thế giới" />
+                            <input name="careerHigh" value={form.careerHigh} onChange={onChange} placeholder="Hạng 1 thế giới (Career High)" />
                         </div>
                         <div className="form-group form-full">
                             <label>Sự kiện (phân cách bởi dấu phẩy)</label>
-                            <input name="events" value={form.events} onChange={onChange} placeholder="Men's Singles, Mixed Doubles" />
-                        </div>
-                        <div className="form-group">
-                            <label>Ảnh 1 (URL)</label>
-                            <input name="img" value={form.img} onChange={onChange} placeholder="https://..." />
-                        </div>
-                        <div className="form-group">
-                            <label>Ảnh 2 (URL)</label>
-                            <input name="img2" value={form.img2} onChange={onChange} placeholder="https://..." />
+                            <input name="events" value={form.events} onChange={onChange} placeholder="Đôi nam nữ, Đơn nam" />
                         </div>
                         <div className="form-group">
                             <label>Trạng thái</label>
-                            <select name="isActive" value={form.isActive} onChange={e => onChange({ target: { name: 'isActive', value: e.target.value === 'true' } })}>
+                            <select name="isActive" value={form.isActive}
+                                onChange={e => onChange({ target: { name: 'isActive', value: e.target.value === 'true' } })}>
                                 <option value="true">Hiển thị</option>
                                 <option value="false">Ẩn</option>
                             </select>
+                        </div>
+                        <div className="form-full">
+                            <ImageUploadField
+                                label="Ảnh 1 (ảnh hành động)"
+                                value={form.img}
+                                onChange={url => onImgChange('img', url)}
+                                getToken={getToken}
+                            />
+                        </div>
+                        <div className="form-full">
+                            <ImageUploadField
+                                label="Ảnh 2 (ảnh chân dung)"
+                                value={form.img2}
+                                onChange={url => onImgChange('img2', url)}
+                                getToken={getToken}
+                            />
                         </div>
                     </div>
                 </div>
@@ -283,14 +450,34 @@ function AdminPage() {
     const openAddProduct = () => { setProdForm(EMPTY_PRODUCT); setProdEditId(null); setProdModal(true); };
     const openEditProduct = (p) => {
         setProdForm({
-            name: p.name || '', series: p.series || '', type: p.status || p.type || 'racket',
-            price: p.price || '', priceDisplay: p.priceDisplay || '',
-            description: p.description || '', img: p.img || '',
-            features: Array.isArray(p.features) ? p.features.join(', ') : (p.features || ''),
-            weight: p.weight || '', balance: p.balance || '', flex: p.flex || '',
-            material: p.material || '', maxTension: p.maxTension || '',
-            color: p.color || '', size: p.size || '', sole: p.sole || '', cushion: p.cushion || '',
-            speed: p.speed || '', feather: p.feather || '', quantity: p.quantity || '',
+            name: p.name || '',
+            series: p.series || '',
+            SKU: p.SKU || p.sku || '',
+            status: p.status || 'racket',
+            price: p.price || '',
+            img: p.img || '',
+            // Racket
+            weightString: p['w/s'] || '',
+            lbs: p.lbs || '',
+            fm: p.fm || '',
+            sm: p.sm || '',
+            balance: p.balance || '',
+            performanceStats: {
+                power: p.performanceStats?.power || '',
+                speed: p.performanceStats?.speed || '',
+                control: p.performanceStats?.control || '',
+            },
+            // Shoes
+            colors: Array.isArray(p.colors) ? p.colors.join(', ') : (p.colors || ''),
+            outsole: p.outsole || '',
+            midsole: p.midsole || '',
+            upper: p.upper || '',
+            size: p.size || '',
+            // Shuttle
+            shuttleType: p.type || '',
+            headMaterial: p.headMaterial || '',
+            speed: p.speed || '',
+            unit: p.unit || '',
             isActive: p.isActive !== false,
         });
         setProdEditId(p._id);
@@ -302,13 +489,45 @@ function AdminPage() {
         setProdForm(f => ({ ...f, [name]: value }));
     };
 
+    const handleProdStatsChange = (e) => {
+        const { name, value } = e.target;
+        setProdForm(f => ({ ...f, performanceStats: { ...f.performanceStats, [name]: value } }));
+    };
+
+    const handleProdImgChange = (field, url) => {
+        setProdForm(f => ({ ...f, [field]: url }));
+    };
+
     const submitProduct = async () => {
         if (!prodForm.name.trim()) { showToast('Vui lòng nhập tên sản phẩm.', 'error'); return; }
+        if (!prodForm.price) { showToast('Vui lòng nhập giá sản phẩm.', 'error'); return; }
         const token = await getToken();
         const payload = {
-            ...prodForm,
-            price: prodForm.price ? Number(prodForm.price) : undefined,
-            features: prodForm.features ? prodForm.features.split(',').map(s => s.trim()).filter(Boolean) : [],
+            name: prodForm.name,
+            series: prodForm.series,
+            SKU: prodForm.SKU,
+            status: prodForm.status,
+            price: Number(prodForm.price),
+            img: prodForm.img,
+            isActive: prodForm.isActive,
+            // Racket
+            'w/s': prodForm.weightString,
+            lbs: prodForm.lbs,
+            fm: prodForm.fm,
+            sm: prodForm.sm,
+            balance: prodForm.balance,
+            performanceStats: prodForm.performanceStats,
+            // Shoes
+            colors: prodForm.colors ? prodForm.colors.split(',').map(s => s.trim()).filter(Boolean) : [],
+            outsole: prodForm.outsole,
+            midsole: prodForm.midsole,
+            upper: prodForm.upper,
+            size: prodForm.size,
+            // Shuttle
+            type: prodForm.shuttleType,
+            headMaterial: prodForm.headMaterial,
+            speed: prodForm.speed,
+            unit: prodForm.unit,
         };
         const url = prodEditId ? `${PROD_API}/${prodEditId}` : PROD_API;
         const method = prodEditId ? 'PUT' : 'POST';
@@ -351,13 +570,30 @@ function AdminPage() {
         else showToast('Khôi phục thất bại.', 'error');
     };
 
+    const permanentDeleteProduct = (id, name) => {
+        setConfirm({
+            message: `Xóa vĩnh viễn "${name}"? Hành động này KHÔNG THỂ hoàn tác.`,
+            onConfirm: async () => {
+                setConfirm(null);
+                const token = await getToken();
+                const res = await fetch(`${PROD_API}/${id}/permanent`, {
+                    method: 'DELETE',
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (res.ok) { showToast('Đã xóa vĩnh viễn sản phẩm.'); fetchProducts(); }
+                else showToast('Xóa vĩnh viễn thất bại.', 'error');
+            }
+        });
+    };
+
     const exportCSV = () => {
-        const filtered = prodFilter === 'all' ? products : products.filter(p => p.type === prodFilter);
-        const headers = ['Tên', 'Loại', 'Series', 'Giá', 'Trạng thái'];
+        const filtered = prodFilter === 'all' ? products : products.filter(p => p.status === prodFilter);
+        const headers = ['Tên', 'Loại', 'Series', 'SKU', 'Giá', 'Trạng thái'];
         const rows = filtered.map(p => [
             `"${p.name || ''}"`,
-            TYPE_LABELS[p.type] || p.type,
+            TYPE_LABELS[p.status] || p.status,
             `"${p.series || ''}"`,
+            `"${p.SKU || ''}"`,
             p.price || '',
             p.isActive ? 'Hiển thị' : 'Ẩn',
         ]);
@@ -406,6 +642,10 @@ function AdminPage() {
     const handleAthChange = (e) => {
         const { name, value } = e.target;
         setAthForm(f => ({ ...f, [name]: value }));
+    };
+
+    const handleAthImgChange = (field, url) => {
+        setAthForm(f => ({ ...f, [field]: url }));
     };
 
     const submitAthlete = async () => {
@@ -497,7 +737,7 @@ function AdminPage() {
         if (activeTab === 'products') fetchProducts();
         if (activeTab === 'athletes') fetchAthletes();
         if (activeTab === 'chat') fetchChatData(1, chatFilter);
-    }, [activeTab, isAdmin, loading, fetchUsers, fetchProducts, fetchAthletes, fetchChatData, navigate]);
+    }, [activeTab, isAdmin, loading, fetchUsers, fetchProducts, fetchAthletes, fetchChatData, navigate, chatFilter]);
 
     if (loading) return (
         <div className="admin-loading" style={{ display:'flex', alignItems:'center', justifyContent:'center', minHeight:'100vh', fontSize:'18px', color:'#003DA5' }}>
@@ -576,9 +816,12 @@ function AdminPage() {
                     <ProductModal
                         form={prodForm}
                         onChange={handleProdChange}
+                        onStatsChange={handleProdStatsChange}
+                        onImgChange={handleProdImgChange}
                         onSubmit={submitProduct}
                         onClose={() => setProdModal(false)}
                         editMode={!!prodEditId}
+                        getToken={getToken}
                     />
                 )}
 
@@ -587,9 +830,11 @@ function AdminPage() {
                     <AthleteModal
                         form={athForm}
                         onChange={handleAthChange}
+                        onImgChange={handleAthImgChange}
                         onSubmit={submitAthlete}
                         onClose={() => setAthModal(false)}
                         editMode={!!athEditId}
+                        getToken={getToken}
                     />
                 )}
 
@@ -706,8 +951,11 @@ function AdminPage() {
                                             <td className="action-cell">
                                                 <button className="btn-edit" onClick={() => openEditProduct(p)}>Sửa</button>
                                                 {p.isActive
-                                                    ? <button className="btn-danger-sm" onClick={() => deleteProduct(p._id)}>Xoá</button>
-                                                    : <button className="btn-restore" onClick={() => restoreProduct(p._id)}>Khôi phục</button>
+                                                    ? <button className="btn-danger-sm" onClick={() => deleteProduct(p._id)}>Ẩn</button>
+                                                    : <>
+                                                        <button className="btn-restore" onClick={() => restoreProduct(p._id)}>Khôi phục</button>
+                                                        <button className="btn-permanent-delete" onClick={() => permanentDeleteProduct(p._id, p.name)}>Xóa vĩnh viễn</button>
+                                                    </>
                                                 }
                                             </td>
                                         </tr>

@@ -4,13 +4,43 @@ import cors from "cors";
 import mongoose from "mongoose";
 import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
-import { clerkMiddleware } from "@clerk/express";
+import { clerkMiddleware, requireAuth, getAuth, createClerkClient } from "@clerk/express";
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
 import athleteRoutes from "./routes/athletes.js";
 import chatRoutes from "./routes/chat.js";
 import Product from "./models/Product.js";
 import ChatLog from "./models/ChatLog.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const uploadDir = path.join(__dirname, '..', 'public', 'images');
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+
+const _clerkClientUpload = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
+async function isAdminForUpload(userId) {
+    const user = await _clerkClientUpload.users.getUser(userId);
+    return user.publicMetadata?.role === 'admin';
+}
+
+const multerStorage = multer.diskStorage({
+    destination: (_req, _file, cb) => cb(null, uploadDir),
+    filename: (_req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        cb(null, `upload-${Date.now()}${ext}`);
+    },
+});
+const uploader = multer({
+    storage: multerStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+    fileFilter: (_req, file, cb) => {
+        if (file.mimetype.startsWith('image/')) cb(null, true);
+        else cb(new Error('Chỉ chấp nhận file ảnh.'));
+    },
+});
 
 // ─── Kết nối MongoDB (serverless-safe) ──────────────────────────────────────
 let connectionPromise = null;
@@ -309,6 +339,21 @@ app.get('/api/chat/provider', (req, res) => {
 app.get('/api/chat/catalog-debug', async (req, res) => {
     const catalog = await buildCatalog();
     res.type('text/plain; charset=utf-8').send(catalog || '(empty)');
+});
+
+// ─── Upload Ảnh ────────────────────────────────────────────────────────────
+app.post('/api/upload', requireAuth(), uploader.single('image'), async (req, res) => {
+    try {
+        const { userId } = getAuth(req);
+        if (!await isAdminForUpload(userId)) {
+            if (req.file) fs.unlinkSync(req.file.path);
+            return res.status(403).json({ error: 'Không có quyền upload.' });
+        }
+        if (!req.file) return res.status(400).json({ error: 'Không có file.' });
+        res.json({ url: `/images/${req.file.filename}` });
+    } catch (err) {
+        res.status(500).json({ error: err.message || 'Lỗi upload.' });
+    }
 });
 
 // Auth routes
