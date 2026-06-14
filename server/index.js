@@ -6,9 +6,7 @@ import rateLimit from 'express-rate-limit';
 import { z } from 'zod';
 import { clerkMiddleware, requireAuth, getAuth, createClerkClient } from "@clerk/express";
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
-import { fileURLToPath } from 'url';
+import { v2 as cloudinary } from 'cloudinary';
 import authRoutes from "./routes/auth.js";
 import productRoutes from "./routes/products.js";
 import athleteRoutes from "./routes/athletes.js";
@@ -16,9 +14,12 @@ import chatRoutes from "./routes/chat.js";
 import Product from "./models/Product.js";
 import ChatLog from "./models/ChatLog.js";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const uploadDir = path.join(__dirname, '..', 'public', 'images');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+// ─── Cloudinary config ───────────────────────────────────────────────────────
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:    process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const _clerkClientUpload = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 async function isAdminForUpload(userId) {
@@ -26,15 +27,9 @@ async function isAdminForUpload(userId) {
     return user.publicMetadata?.role === 'admin';
 }
 
-const multerStorage = multer.diskStorage({
-    destination: (_req, _file, cb) => cb(null, uploadDir),
-    filename: (_req, file, cb) => {
-        const ext = path.extname(file.originalname).toLowerCase();
-        cb(null, `upload-${Date.now()}${ext}`);
-    },
-});
+// multer dùng memory storage — không ghi ra disk (tương thích Vercel serverless)
 const uploader = multer({
-    storage: multerStorage,
+    storage: multer.memoryStorage(),
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
     fileFilter: (_req, file, cb) => {
         if (file.mimetype.startsWith('image/')) cb(null, true);
@@ -346,12 +341,22 @@ app.post('/api/upload', requireAuth(), uploader.single('image'), async (req, res
     try {
         const { userId } = getAuth(req);
         if (!await isAdminForUpload(userId)) {
-            if (req.file) fs.unlinkSync(req.file.path);
             return res.status(403).json({ error: 'Không có quyền upload.' });
         }
         if (!req.file) return res.status(400).json({ error: 'Không có file.' });
-        res.json({ url: `/images/${req.file.filename}` });
+
+        // Upload buffer lên Cloudinary
+        const result = await new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+                { folder: 'victor-badminton', resource_type: 'image' },
+                (err, result) => err ? reject(err) : resolve(result)
+            );
+            stream.end(req.file.buffer);
+        });
+
+        res.json({ url: result.secure_url });
     } catch (err) {
+        console.error('Upload error:', err);
         res.status(500).json({ error: err.message || 'Lỗi upload.' });
     }
 });
